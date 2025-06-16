@@ -1,0 +1,66 @@
+server:
+  port: 8081
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    packages-to-scan: com.sls.product_management.controller
+app:
+  security:
+    allowed-ips: 127.0.0.1, 0:0:0:0:0:0:0:1
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/product_db
+    username: root
+    password: root
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    user:
+      name: admin
+      password: password
+      roles: ADMIN,USER
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, beans, env, metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  file:
+    name: logs/application.log
+  level:
+    org:
+      springframework: INFO
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicExtractor: TRACE
+    com:
+      example:
+        product_sales_app: DEBUG
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{30} - %msg%n"
